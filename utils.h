@@ -104,4 +104,6 @@ int vshIoMount(int id, const char *path, int permission, int a4, int a5, int a6)
 
 void remount(int id);
 
+char* getFileNameUpdated(const char* filepath);
+
 #endif

@@ -26,6 +26,12 @@ enum UsbDeviceModes {
   USBDEVICE_MODE_PSVSD,
 };
 
+enum OverwriteModes {
+  OVERWRITE_MODE_ALWAYS,
+  OVERWRITE_MODE_RENAME,
+  OVERWRITE_MODE_SKIP,
+};
+
 enum SelectButtonModes {
   SELECT_BUTTON_MODE_USB,
   SELECT_BUTTON_MODE_FTP,
@@ -36,6 +42,7 @@ typedef struct {
   int select_button;
   int disable_autoupdate;
   int disable_warning;
+  int overwrite_files;
 } VitaShellConfig;
 
 #endif

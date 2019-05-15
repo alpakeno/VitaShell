@@ -429,3 +429,36 @@ void remount(int id) {
   vshIoUmount(id, 1, 0, 0);
   vshIoMount(id, NULL, 0, 0, 0, 0);
 }
+
+char * getFileExt(const char* filepath) {
+	char *file_ext = malloc(strlen(filepath)+1);
+	file_ext = (strrchr(filepath, '.'));
+	if (file_ext == NULL)
+		return "";
+	return file_ext;
+}
+
+char * getFilePathWithoutExt(const char* filepath) {
+	char *filename = malloc(strlen(filepath)+1);
+	strcpy(filename, filepath);
+    char *p;
+    p = strrchr(filename, '.');
+	if (p == NULL)
+		return filename;
+    *p = '\0';
+	return filename;
+}
+
+char * getFileNameUpdated(const char* filepath) {
+	char *new_filepath = malloc(MAX_PATH_LENGTH);
+	char *filepath_noext = getFilePathWithoutExt(filepath);
+	char *file_ext = getFileExt(filepath);
+	int file_id = 2;
+	while (1) {	
+		snprintf(new_filepath, MAX_PATH_LENGTH, "%s_%d%s", filepath_noext, file_id++, file_ext);
+		SceUID fd = sceIoOpen(new_filepath, SCE_O_RDONLY, 0);
+		if (fd < 0) break;
+		sceIoClose(fd);
+	}
+	return new_filepath;
+}
