@@ -450,10 +450,15 @@ char * getFilePathWithoutExt(const char* filepath) {
 }
 
 char * getFileNameUpdated(const char* filepath) {
+	// initialize new file path
 	char *new_filepath = malloc(MAX_PATH_LENGTH);
+	// get full file path but without file extension
 	char *filepath_noext = getFilePathWithoutExt(filepath);
+	// get file extension including dot
 	char *file_ext = getFileExt(filepath);
+	// starting from number 2 since the exists file is obviously means the first one
 	int file_id = 2;
+	// loop to check the existence of file
 	while (1) {	
 		snprintf(new_filepath, MAX_PATH_LENGTH, "%s_%d%s", filepath_noext, file_id++, file_ext);
 		SceUID fd = sceIoOpen(new_filepath, SCE_O_RDONLY, 0);

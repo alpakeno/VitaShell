@@ -749,16 +749,14 @@ int extractArchivePath(const char *src_path, const char *dst_path, FileProcessPa
       if (entry->is_folder) {
         ret = extractArchivePath(new_src_path, new_dst_path, param);
       } else {
-		if (checkFileExist(new_dst_path)) {
-			if (vitashell_config.overwrite_files == OVERWRITE_MODE_RENAME)
-				ret = extractArchiveFile(new_src_path, getFileNameUpdated(new_dst_path), param);
-			else if (vitashell_config.overwrite_files == OVERWRITE_MODE_SKIP)
-				ret = 1;
-			else
-				ret = extractArchiveFile(new_src_path, new_dst_path, param);
-		} else {
+		if (vitashell_config.overwrite_files == OVERWRITE_MODE_ALWAYS) {
 			ret = extractArchiveFile(new_src_path, new_dst_path, param);
-		}	
+		} else {
+		   if (checkFileExist(new_dst_path))
+			   ret = (vitashell_config.overwrite_files == OVERWRITE_MODE_RENAME) ? extractArchiveFile(new_src_path, getFileNameUpdated(new_dst_path), param) : 1;
+		   else
+			   ret = extractArchiveFile(new_src_path, new_dst_path, param);
+		}
       }
         
       free(new_dst_path);
@@ -772,16 +770,14 @@ int extractArchivePath(const char *src_path, const char *dst_path, FileProcessPa
 
     fileListEmpty(&list);
   } else {
-	  if (checkFileExist(dst_path)) {
-		  if (vitashell_config.overwrite_files == OVERWRITE_MODE_RENAME)
-			  return extractArchiveFile(src_path, getFileNameUpdated(dst_path), param);
-		  else if (vitashell_config.overwrite_files == OVERWRITE_MODE_SKIP)
-			  return 1;
-		  else
-			  return extractArchiveFile(src_path, dst_path, param);
-	  } else {
-		  return extractArchiveFile(src_path, dst_path, param);
-	  }
+	if (vitashell_config.overwrite_files == OVERWRITE_MODE_ALWAYS) {
+		return extractArchiveFile(src_path, dst_path, param);
+	} else {
+	   if (checkFileExist(dst_path))
+		   return (vitashell_config.overwrite_files == OVERWRITE_MODE_RENAME) ? extractArchiveFile(src_path, getFileNameUpdated(dst_path), param) : 1;
+	   else
+		   return extractArchiveFile(src_path, dst_path, param);
+	}	
   }
 
   return 1;
